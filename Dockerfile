@@ -24,3 +24,4 @@ RUN apk add --no-cache --virtual .build-deps \
 # change user
 USER fluent
 
+ENTRYPOINT ["/bin/entrypoint.sh", "/bin/sh", "-c", "exec fluentd -c /fluentd/etc/${FLUENTD_CONF} -p /fluentd/plugins $FLUENTD_OPT"]

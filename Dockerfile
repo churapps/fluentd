@@ -14,14 +14,17 @@ RUN apk add sudo \
     && echo 'Defaults:fluent !requiretty' >> /etc/sudoers
 
 # gem installing some  packages
-RUN apk add --no-cache --virtual .build-deps \
-    build-base \
-    ruby-dev && \
-    gem install fluent-plugin-forest --no-document && \
-    gem install fluent-plugin-cloudwatch-logs --no-document && \
-    apk del .build-deps
+RUN apk add --no-cache --update --virtual .build-deps \
+    sudo build-base ruby-dev \
+    && sudo gem install fluent-plugin-forest --no-document \
+    && sudo gem install fluent-plugin-cloudwatch-logs --no-document \
+    && sudo gem sources --clear-all \
+    && apk del .build-deps \
+    && rm -rf /tmp/* /var/tmp/* /usr/lib/ruby/gems/*/cache/*.gem
+
+COPY fluent.conf /fluentd/etc/
+COPY entrypoint.sh /bin/
 
 # change user
 USER fluent
 
-ENTRYPOINT ["/bin/entrypoint.sh", "/bin/sh", "-c", "exec fluentd -c /fluentd/etc/${FLUENTD_CONF} -p /fluentd/plugins $FLUENTD_OPT"]

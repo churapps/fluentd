@@ -1,5 +1,5 @@
-# fluent/fluentd:v1.11.5-1.0
-FROM fluent/fluentd:v1.11.5-1.0
+# fluent/fluentd:
+FROM fluent/fluentd:v1.14-1
 
 # usage root user
 USER root
